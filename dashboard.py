@@ -199,14 +199,19 @@ df_filtered_pub = df_filtered_cat.copy()
 if selected_pub != "All Publishers":
     df_filtered_pub = df_filtered_pub[df_filtered_pub["publisher_domain"] == selected_pub]
 
-net_options = ["All Networks"] + sorted(list(df_filtered_pub["ssp_domain"].unique()))
-selected_net = st.sidebar.selectbox("Select Ad Tech Network", net_options, index=0)
+net_options = sorted(list(df_filtered_pub["ssp_domain"].unique()))
+selected_nets = st.sidebar.multiselect("Select Ad Tech Networks (Searchable)", options=net_options, default=[])
 
 # Filter 4: DSP Compatibility Filter
 st.sidebar.markdown("---")
 st.sidebar.markdown("### DSP Compatibility Audit")
-dsp_list = ["All DSPs", "The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "Criteo DSP", "InMobi DSP", "Liftoff"]
-selected_dsp = st.sidebar.selectbox("Filter by Connected DSP Buyer", dsp_list, index=0)
+dsp_options = ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "Criteo DSP", "InMobi DSP", "Liftoff"]
+selected_dsps = st.sidebar.multiselect("Select Connected DSP Buyers (Searchable)", options=dsp_options, default=[])
+
+# Filter 5: Relationship Filter
+st.sidebar.markdown("---")
+st.sidebar.markdown("### Supply Path Relationships")
+selected_rels = st.sidebar.multiselect("Select Supply Relationships", options=["DIRECT", "RESELLER"], default=["DIRECT", "RESELLER"])
 
 # Top X networks slider control
 st.sidebar.markdown("---")
@@ -219,10 +224,14 @@ if selected_cat != "All Categories":
     df_filtered = df_filtered[df_filtered["publisher_category"] == selected_cat]
 if selected_pub != "All Publishers":
     df_filtered = df_filtered[df_filtered["publisher_domain"] == selected_pub]
-if selected_net != "All Networks":
-    df_filtered = df_filtered[df_filtered["ssp_domain"] == selected_net]
-if selected_dsp != "All DSPs":
-    df_filtered = df_filtered[df_filtered["connected_dsps"].apply(lambda x: selected_dsp in x)]
+if selected_nets:
+    df_filtered = df_filtered[df_filtered["ssp_domain"].isin(selected_nets)]
+if selected_dsps:
+    df_filtered = df_filtered[df_filtered["connected_dsps"].apply(lambda x: any(dsp in x for dsp in selected_dsps))]
+if selected_rels:
+    df_filtered = df_filtered[df_filtered["relationship"].isin(selected_rels)]
+else:
+    df_filtered = df_filtered[df_filtered["relationship"].isin([])]
 
 # --- Main Dashboard Header ---
 st.markdown(f"""
