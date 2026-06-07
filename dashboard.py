@@ -208,6 +208,11 @@ st.sidebar.markdown("### DSP Compatibility Audit")
 dsp_list = ["All DSPs", "The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "Criteo DSP", "InMobi DSP", "Liftoff"]
 selected_dsp = st.sidebar.selectbox("Filter by Connected DSP Buyer", dsp_list, index=0)
 
+# Top X networks slider control
+st.sidebar.markdown("---")
+st.sidebar.markdown("### Visualization Controls")
+top_x = st.sidebar.slider("Top Networks to Display", min_value=5, max_value=30, value=10, step=5)
+
 # Apply all filters to the final dataset
 df_filtered = df.copy()
 if selected_cat != "All Categories":
@@ -273,10 +278,10 @@ with tab1:
     chart_col1, chart_col2 = st.columns(2)
 
     with chart_col1:
-        st.markdown("### Top Ad Networks")
+        st.markdown(f"### Top {top_x} Ad Networks")
         ssp_counts = df_filtered["ssp_domain"].value_counts().reset_index()
         ssp_counts.columns = ["Ad Network", "Paths"]
-        top_ssps = ssp_counts.head(10).sort_values(by="Paths", ascending=True)
+        top_ssps = ssp_counts.head(top_x).sort_values(by="Paths", ascending=True)
         
         if not top_ssps.empty:
             fig_bar = px.bar(
