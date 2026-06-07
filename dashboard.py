@@ -427,10 +427,8 @@ with tab2:
     
     st.markdown("### 🖥️ Programmatic Supply Path Architecture")
     
-    # CSS Flexbox based horizontal flow diagram
     st.markdown("""
     <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: stretch; gap: 10px; margin: 20px 0; font-family: sans-serif;">
-        <!-- Card 1 -->
         <div style="flex: 1; min-width: 200px; background-color: rgba(30, 41, 59, 0.05); border: 2px solid #3B82F6; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
                 <span style="font-size: 11px; background-color: #3B82F6; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">1. Buy-Side</span>
@@ -440,10 +438,8 @@ with tab2:
             <div style="margin-top: 15px; font-size: 11px; color: #64748B; font-style: italic;">Audits supply path transparency</div>
         </div>
         
-        <!-- Arrow 1 -->
         <div style="display: flex; align-items: center; justify-content: center; font-size: 24px; color: #94A3B8;">➡️</div>
         
-        <!-- Card 2 -->
         <div style="flex: 1; min-width: 200px; background-color: rgba(13, 148, 136, 0.05); border: 2px solid #0D9488; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
                 <span style="font-size: 11px; background-color: #0D9488; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">2. Intermediary</span>
@@ -453,10 +449,8 @@ with tab2:
             <div style="margin-top: 15px; font-size: 11px; color: #64748B; font-style: italic;">Matches Seller ID to Legal entity</div>
         </div>
         
-        <!-- Arrow 2 -->
         <div style="display: flex; align-items: center; justify-content: center; font-size: 24px; color: #94A3B8;">➡️</div>
         
-        <!-- Card 3 -->
         <div style="flex: 1; min-width: 200px; background-color: rgba(16, 185, 129, 0.05); border: 2px solid #10B981; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between;">
             <div>
                 <span style="font-size: 11px; background-color: #10B981; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">3. Sell-Side</span>
