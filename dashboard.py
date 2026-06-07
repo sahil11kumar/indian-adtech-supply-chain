@@ -432,37 +432,31 @@ with tab2:
     
     st.markdown("### 🖥️ Programmatic Supply Path Architecture")
     
-    st.markdown("""
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: stretch; gap: 10px; margin: 20px 0; font-family: sans-serif;">
-        <div style="flex: 1; min-width: 200px; background-color: rgba(30, 41, 59, 0.05); border: 2px solid #3B82F6; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-                <span style="font-size: 11px; background-color: #3B82F6; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">1. Buy-Side</span>
-                <h4 style="margin: 10px 0 5px 0; color: #2563EB;">Advertiser / DSP</h4>
-                <p style="font-size: 13px; margin: 0; line-height: 1.4; color: var(--text-color);">Advertisers configure campaigns inside the <b>DSP</b> (e.g. The Trade Desk) to bid on target audiences.</p>
-            </div>
-            <div style="margin-top: 15px; font-size: 11px; color: #64748B; font-style: italic;">Audits supply path transparency</div>
-        </div>
-        
-        <div style="display: flex; align-items: center; justify-content: center; font-size: 24px; color: #94A3B8;">➡️</div>
-        
-        <div style="flex: 1; min-width: 200px; background-color: rgba(13, 148, 136, 0.05); border: 2px solid #0D9488; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-                <span style="font-size: 11px; background-color: #0D9488; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">2. Intermediary</span>
-                <h4 style="margin: 10px 0 5px 0; color: #0D9488;">SSP / Ad Exchange</h4>
-                <p style="font-size: 13px; margin: 0; line-height: 1.4; color: var(--text-color);">Exchanges (e.g. PubMatic, Rubicon) conduct auctions and host a public <b>sellers.json</b> directory.</p>
-            </div>
-            <div style="margin-top: 15px; font-size: 11px; color: #64748B; font-style: italic;">Matches Seller ID to Legal entity</div>
-        </div>
-        
-        <div style="display: flex; align-items: center; justify-content: center; font-size: 24px; color: #94A3B8;">➡️</div>
-        
-        <div style="flex: 1; min-width: 200px; background-color: rgba(16, 185, 129, 0.05); border: 2px solid #10B981; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between;">
-            <div>
-                <span style="font-size: 11px; background-color: #10B981; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">3. Sell-Side</span>
-                <h4 style="margin: 10px 0 5px 0; color: #059669;">Publisher Website</h4>
-                <p style="font-size: 13px; margin: 0; line-height: 1.4; color: var(--text-color);">Websites (e.g. Times of India, NDTV) publish their authorized channels inside public <b>ads.txt</b> files.</p>
-            </div>
-            <div style="margin-top: 15px; font-size: 11px; color: #64748B; font-style: italic;">Lists authorized seller accounts</div>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("""<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: stretch; gap: 10px; margin: 20px 0; font-family: sans-serif;">
+<div style="flex: 1; min-width: 200px; background-color: rgba(30, 41, 59, 0.05); border: 2px solid #3B82F6; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between;">
+<div>
+<span style="font-size: 11px; background-color: #3B82F6; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">1. Buy-Side</span>
+<h4 style="margin: 10px 0 5px 0; color: #2563EB;">Advertiser / DSP</h4>
+<p style="font-size: 13px; margin: 0; line-height: 1.4; color: var(--text-color);">Advertisers configure campaigns inside the <b>DSP</b> (e.g. The Trade Desk) to bid on target audiences.</p>
+</div>
+<div style="margin-top: 15px; font-size: 11px; color: #64748B; font-style: italic;">Audits supply path transparency</div>
+</div>
+<div style="display: flex; align-items: center; justify-content: center; font-size: 24px; color: #94A3B8;">➡️</div>
+<div style="flex: 1; min-width: 200px; background-color: rgba(13, 148, 136, 0.05); border: 2px solid #0D9488; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between;">
+<div>
+<span style="font-size: 11px; background-color: #0D9488; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">2. Intermediary</span>
+<h4 style="margin: 10px 0 5px 0; color: #0D9488;">SSP / Ad Exchange</h4>
+<p style="font-size: 13px; margin: 0; line-height: 1.4; color: var(--text-color);">Exchanges (e.g. PubMatic, Rubicon) conduct auctions and host a public <b>sellers.json</b> directory.</p>
+</div>
+<div style="margin-top: 15px; font-size: 11px; color: #64748B; font-style: italic;">Matches Seller ID to Legal entity</div>
+</div>
+<div style="display: flex; align-items: center; justify-content: center; font-size: 24px; color: #94A3B8;">➡️</div>
+<div style="flex: 1; min-width: 200px; background-color: rgba(16, 185, 129, 0.05); border: 2px solid #10B981; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between;">
+<div>
+<span style="font-size: 11px; background-color: #10B981; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">3. Sell-Side</span>
+<h4 style="margin: 10px 0 5px 0; color: #059669;">Publisher Website</h4>
+<p style="font-size: 13px; margin: 0; line-height: 1.4; color: var(--text-color);">Websites (e.g. Times of India, NDTV) publish their authorized channels inside public <b>ads.txt</b> files.</p>
+</div>
+<div style="margin-top: 15px; font-size: 11px; color: #64748B; font-style: italic;">Lists authorized seller accounts</div>
+</div>
+</div>""", unsafe_allow_html=True)
