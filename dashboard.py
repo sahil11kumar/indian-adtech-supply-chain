@@ -418,60 +418,113 @@ with tab1:
             st.markdown("📈 **Sellers.json Match Rate:** No records from top global SSPs found in this selection.")
 
 with tab2:
-    st.markdown("## 💡 How Programmatic Supply Chains Work")
     st.markdown("""
-    To verify programmatic advertising inventory transparency, we use two public standards defined by the **IAB Tech Lab**: 
-    **ads.txt** (sell-side publication by the publisher) and **sellers.json** (sell-side directory hosted by the SSPs/Exchanges).
-    """)
-    
-    st.markdown("### 🔗 The Downstream Connection to DSPs (Buy-Side)")
-    st.markdown("""
-    **Demand-Side Platforms (DSPs)** (like *The Trade Desk, Google Display & Video 360, Yahoo DSP*) are the portals through which advertisers bid on impressions. 
-    DSPs do not host `ads.txt` or `sellers.json` files themselves because they buy inventory, rather than sell it. 
-    
-    Instead, DSPs act as the **primary auditors** of these standards. When a DSP receives a bid request from an SSP:
-    1. The SSP includes a **`SupplyChain` Object (schain)** in the bid request. This shows all intermediaries involved in passing the ad slot.
-    2. The DSP checks the **`ads.txt`** of the publisher to see if the sending SSP and Seller ID are authorized.
-    3. The DSP cross-references the SSP's **`sellers.json`** to make sure the Seller ID exists and matches the legal entity name.
-    4. If there is a mismatch (e.g. an ID is unlisted in `sellers.json` or unauthorized in `ads.txt`), the DSP **declines to bid**, protecting the advertiser's budget from fraud.
-    """)
-    
-    st.markdown("### 🖥️ Programmatic Supply Path Architecture")
-    
-    st.markdown("""<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: stretch; gap: 10px; margin: 20px 0; font-family: sans-serif;">
-<div style="flex: 1; min-width: 200px; background-color: rgba(30, 41, 59, 0.05); border: 2px solid #3B82F6; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between;">
-<div>
-<span style="font-size: 11px; background-color: #3B82F6; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">1. Buy-Side</span>
-<h4 style="margin: 10px 0 5px 0; color: #2563EB;">Advertiser / DSP</h4>
-<p style="font-size: 13px; margin: 0; line-height: 1.4; color: var(--text-color);">Advertisers configure campaigns inside the <b>DSP</b> (e.g. The Trade Desk) to bid on target audiences.</p>
+<div style="font-family: 'Inter', -apple-system, sans-serif; color: #1E293B;">
+<div style="background: linear-gradient(135deg, rgba(30, 58, 138, 0.05) 0%, rgba(13, 148, 136, 0.05) 100%); border-left: 5px solid #0D9488; padding: 22px; border-radius: 8px; margin-bottom: 25px;">
+<h3 style="margin-top: 0; color: #0F766E; font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">🛡️ The Foundation of Programmatic Transparency</h3>
+<p style="margin: 6px 0 0 0; line-height: 1.6; font-size: 0.95rem; color: #334155;">
+Programmatic advertising utilizes automated real-time auctions to buy and sell ad impressions. To prevent fraud, domain spoofing, and hidden arbitrage fees, the industry relies on standard transparency protocols defined by the <b>IAB Tech Lab</b>.
+</p>
 </div>
-<div style="margin-top: 15px; font-size: 11px; color: #64748B; font-style: italic;">Audits supply path transparency</div>
+<div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
+<div style="flex: 1; min-width: 280px; background-color: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 24px;">📄</span>
+<h4 style="margin: 0; color: #1E3A8A; font-size: 1.15rem; font-weight: 700;">ads.txt</h4>
 </div>
-<div style="display: flex; align-items: center; justify-content: center; font-size: 24px; color: #94A3B8;">➡️</div>
-<div style="flex: 1; min-width: 200px; background-color: rgba(13, 148, 136, 0.05); border: 2px solid #0D9488; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between;">
-<div>
-<span style="font-size: 11px; background-color: #0D9488; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">2. Intermediary</span>
-<h4 style="margin: 10px 0 5px 0; color: #0D9488;">SSP / Ad Exchange</h4>
-<p style="font-size: 13px; margin: 0; line-height: 1.4; color: var(--text-color);">Exchanges (e.g. PubMatic, Rubicon) conduct auctions and host a public <b>sellers.json</b> directory.</p>
+<p style="font-size: 0.88rem; line-height: 1.5; margin: 0; color: #475569;">
+<b>Authorized Digital Sellers (Sell-Side)</b><br>
+A public text file hosted on the publisher's root domain (e.g., <i>publisher.com/ads.txt</i>). It declares exactly which ad exchanges/SSPs are authorized to sell the publisher's ad space, mapping them to specific account IDs.
+</p>
 </div>
-<div style="margin-top: 15px; font-size: 11px; color: #64748B; font-style: italic;">Matches Seller ID to Legal entity</div>
+<div style="flex: 1; min-width: 280px; background-color: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 24px;">📇</span>
+<h4 style="margin: 0; color: #0D9488; font-size: 1.15rem; font-weight: 700;">sellers.json</h4>
 </div>
-<div style="display: flex; align-items: center; justify-content: center; font-size: 24px; color: #94A3B8;">➡️</div>
-<div style="flex: 1; min-width: 200px; background-color: rgba(16, 185, 129, 0.05); border: 2px solid #10B981; border-radius: 12px; padding: 15px; display: flex; flex-direction: column; justify-content: space-between;">
-<div>
-<span style="font-size: 11px; background-color: #10B981; color: white; padding: 3px 6px; border-radius: 4px; font-weight: bold; text-transform: uppercase;">3. Sell-Side</span>
-<h4 style="margin: 10px 0 5px 0; color: #059669;">Publisher Website</h4>
-<p style="font-size: 13px; margin: 0; line-height: 1.4; color: var(--text-color);">Websites (e.g. Times of India, NDTV) publish their authorized channels inside public <b>ads.txt</b> files.</p>
+<p style="font-size: 0.88rem; line-height: 1.5; margin: 0; color: #475569;">
+<b>SSP Seller Directory (Exchange-Side)</b><br>
+A public JSON directory hosted by ad networks/SSPs (e.g., <i>ssp.com/sellers.json</i>). It maps account IDs back to the real legal entity name of the seller, identifying whether they are a <code>PUBLISHER</code> (direct) or an <code>INTERMEDIARY</code> (reseller).
+</p>
 </div>
-<div style="margin-top: 15px; font-size: 11px; color: #64748B; font-style: italic;">Lists authorized seller accounts</div>
+<div style="flex: 1; min-width: 280px; background-color: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
+<span style="font-size: 24px;">🔗</span>
+<h4 style="margin: 0; color: #B45309; font-size: 1.15rem; font-weight: 700;">schain Object</h4>
 </div>
-</div>""", unsafe_allow_html=True)
-    
-    st.markdown("### 🏷️ The Brand & Advertiser Perspective (Nike, Adidas, Puma)")
-    st.markdown("""
-    When analyzing the ad-tech ecosystem, it is common to wonder why major brand websites (like **Nike, Adidas, Puma, Apple, or Samsung**) do not have publicly available `ads.txt` files on their root domains.
-    
-    *   **They are Buyers, not Sellers:** Brand websites are commercial storefronts or corporate portals designed to sell their own products. They do not monetize their web traffic by selling display ad spaces to third-party networks, meaning they do not have digital inventory to declare via `ads.txt`.
-    *   **The Funding Source:** Instead of selling ad space, these brands act as the financial engine of the programmatic ecosystem. They write the checks.
-    *   **Bidding Governance:** Using DSPs, brands configure rules to ensure their dollars are spent efficiently. For example, a campaign manager at Nike setting up a campaign in *The Trade Desk* will configure bidder restrictions to **only buy DIRECT paths** on target publishers (like sports/news websites), automatically filtering out reseller lines to avoid extra fee margins.
-    """)
+<p style="font-size: 0.88rem; line-height: 1.5; margin: 0; color: #475569;">
+<b>SupplyChain Object (OpenRTB Protocol)</b><br>
+A digital record passed in real-time within the bid request. It acts like a flight manifest, recording every intermediary node that touched the bid request from the publisher to the auction house, preventing spoofed hops.
+</p>
+</div>
+</div>
+<h3 style="color: #1E3A8A; font-size: 1.25rem; font-weight: 700; margin-top: 30px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">⚡ The Real-Time Auditing Flow</h3>
+<p style="margin-top: 0; margin-bottom: 20px; font-size: 0.95rem; color: #475569; line-height: 1.5;">
+When an ad slot loads on a publisher's site, a Demand-Side Platform (DSP) must audit the supply path in under <b>100 milliseconds</b> before deciding to bid:
+</p>
+<div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 35px;">
+<div style="display: flex; gap: 15px; background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
+<div style="background: #3B82F6; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0;">1</div>
+<div style="flex: 1;">
+<h4 style="margin: 0 0 4px 0; color: #1E293B; font-size: 0.98rem; font-weight: 700;">Bid Request Generation & schain Entry</h4>
+<p style="margin: 0; font-size: 0.88rem; color: #475569; line-height: 1.45;">
+The publisher's webpage calls an SSP (e.g. PubMatic). The SSP constructs an OpenRTB bid request, logs its domain and member account ID inside the <code>schain</code> object, and sends it to demand buyers.
+</p>
+</div>
+</div>
+<div style="display: flex; gap: 15px; background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
+<div style="background: #10B981; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0;">2</div>
+<div style="flex: 1;">
+<h4 style="margin: 0 0 4px 0; color: #1E293B; font-size: 0.98rem; font-weight: 700;">Sell-Side Authorization Cross-Reference (ads.txt)</h4>
+<p style="margin: 0; font-size: 0.88rem; color: #475569; line-height: 1.45;">
+The DSP (e.g. The Trade Desk) receives the request, fetches the publisher domain's <code>ads.txt</code> file, and verifies that the sending SSP's domain and the listed Seller ID are explicitly authorized.
+</p>
+</div>
+</div>
+<div style="display: flex; gap: 15px; background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
+<div style="background: #F59E0B; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0;">3</div>
+<div style="flex: 1;">
+<h4 style="margin: 0 0 4px 0; color: #1E293B; font-size: 0.98rem; font-weight: 700;">Legal Entity Authentication (sellers.json)</h4>
+<p style="margin: 0; font-size: 0.88rem; color: #475569; line-height: 1.45;">
+The DSP checks the SSP's <code>sellers.json</code> directory. It resolves the Seller ID to its registered corporate name and audits whether the contract relationship (DIRECT vs. RESELLER) matches the declaration.
+</p>
+</div>
+</div>
+<div style="display: flex; gap: 15px; background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
+<div style="background: #EC4899; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0;">4</div>
+<div style="flex: 1;">
+<h4 style="margin: 0 0 4px 0; color: #1E293B; font-size: 0.98rem; font-weight: 700;">Bidding Execution or Fraud Prevention Drop</h4>
+<p style="margin: 0; font-size: 0.88rem; color: #475569; line-height: 1.45;">
+If all checks match, the DSP submits the brand's bid. If any mismatch occurs (e.g. ID missing in <code>sellers.json</code>, or unauthorized in <code>ads.txt</code>), the DSP drops the bid request immediately, blocking the bid.
+</p>
+</div>
+</div>
+</div>
+<h3 style="color: #1E3A8A; font-size: 1.25rem; font-weight: 700; margin-top: 30px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px;">❓ Frequently Asked Questions</h3>
+<div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;">
+<div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;">
+<h4 style="margin-top: 0; color: #1E3A8A; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Q: Why don't brand sites like Nike, Adidas, or Puma host ads.txt files?</h4>
+<p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: #475569;">
+<b>Because they are buy-side advertisers, not sell-side publishers.</b><br>
+An <code>ads.txt</code> file is designed to govern <i>sellers</i>. Storefronts like Nike, Adidas, Apple, or Puma do not sell third-party banner spaces on their product pages. They only buy inventory across news, entertainment, and sports sites to run their product ads. Since they have no digital ad inventory to sell, they have no reason to host an <code>ads.txt</code> file. Instead, their campaign managers set strict bid rules in their DSPs to only buy from verified publisher lines.
+</p>
+</div>
+<div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;">
+<h4 style="margin-top: 0; color: #1E3A8A; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Q: Why don't Demand-Side Platforms (DSPs) host ads.txt or sellers.json?</h4>
+<p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: #475569;">
+<b>DSPs act as buyers and auditors.</b><br>
+A DSP (like The Trade Desk) represents the buyer. Since a DSP does not route payouts to publishers or sell ad space, it has no sell-side directories. Instead, the DSP acts as the gatekeeper. It constantly crawls, processes, and stores the public <code>ads.txt</code> and <code>sellers.json</code> files hosted by publishers and SSPs worldwide to audit every bid request in real-time.
+</p>
+</div>
+<div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;">
+<h4 style="margin-top: 0; color: #1E3A8A; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Q: What is the difference between a DIRECT and RESELLER relationship?</h4>
+<p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: #475569;">
+<b>Direct contracts vs. Intermediary wrappers.</b><br>
+- A <b>DIRECT</b> path indicates the SSP has a direct contract with the publisher and issues payouts directly to them.<br>
+- A <b>RESELLER</b> path indicates the SSP pays a third-party intermediary network or wrapper that holds the direct contract with the publisher.<br>
+Buyers prefer DIRECT paths because they eliminate extra tech-fee margins taken by intermediaries, ensuring maximum budget reaches the publisher.
+</p>
+</div>
+</div>
+</div>
+""", unsafe_allow_html=True)
