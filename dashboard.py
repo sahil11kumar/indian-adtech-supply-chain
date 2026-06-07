@@ -85,11 +85,10 @@ SSP_CLASSIFICATIONS = {
 
 # Mappings of SSP domains to major DSP buyers connected via OpenRTB
 SSP_DSP_MAPPINGS = {
-    "google.com": ["Google DV360", "The Trade Desk", "Amazon DSP", "Yahoo DSP", "Adobe Advertising", "Criteo DSP"],
-    "pubmatic.com": ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "MediaMath", "Criteo DSP"],
+    "google.com": ["Google DV360", "The Trade Desk", "Amazon DSP", "Yahoo DSP", "Adobe Advertising"],
+    "pubmatic.com": ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "MediaMath"],
     "rubiconproject.com": ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "Beeswax", "Amobee"],
     "magnite.com": ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "Beeswax", "Amobee"],
-    "criteo.com": ["Criteo DSP", "The Trade Desk", "Google DV360"],
     "inmobi.com": ["InMobi DSP", "The Trade Desk", "Google DV360", "Liftoff", "AppLovin", "AdColony"],
     "appnexus.com": ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "Xandr Invest", "MediaMath"],
     "openx.com": ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "Adobe Advertising"],
@@ -205,7 +204,7 @@ selected_nets = st.sidebar.multiselect("Select Ad Tech Networks (Searchable)", o
 # Filter 4: DSP Compatibility Filter
 st.sidebar.markdown("---")
 st.sidebar.markdown("### DSP Compatibility Audit")
-dsp_options = ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "Criteo DSP", "InMobi DSP", "Liftoff"]
+dsp_options = ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "InMobi DSP", "Liftoff"]
 selected_dsps = st.sidebar.multiselect("Select Connected DSP Buyers (Searchable)", options=dsp_options, default=[])
 
 # Filter 5: Relationship Filter
@@ -245,9 +244,6 @@ st.markdown(f"""
 tab1, tab2 = st.tabs(["📊 Supply Chain Auditor", "💡 Programmatic Supply Chain Explained"])
 
 with tab1:
-    # --- Criteo Market Notice (only for India) ---
-    if "India" in selected_market:
-        st.info("💡 **India Criteo Insight:** Criteo has lower direct publisher adoption in India compared to Google or PubMatic. Criteo primarily purchases Indian traffic via header-bidding reseller paths rather than direct integrations.")
 
     # --- Executive KPI Cards ---
     total_paths = len(df_filtered)
@@ -412,13 +408,13 @@ with tab1:
     with col_info1:
         st.markdown("💡 **Audit Tip:** Use the **DSP Compatibility** filter in the sidebar to review SPO paths for specific platforms. Selecting 'The Trade Desk' will highlight only the SSP/Exchange connections that TTD actively bids on.")
     with col_info2:
-        top3_subset = df_filtered[df_filtered["ssp_domain"].isin(["google.com", "criteo.com", "rubiconproject.com", "magnite.com"])]
+        top3_subset = df_filtered[df_filtered["ssp_domain"].isin(["google.com", "rubiconproject.com", "magnite.com"])]
         if len(top3_subset) > 0:
             matched_count = len(top3_subset[~top3_subset["verified_legal_entity"].str.contains("Unlisted|Not Tracked", case=False, na=False)])
             match_rate = (matched_count / len(top3_subset)) * 100
-            st.markdown(f"📈 **Sellers.json Match Rate:** **{match_rate:.1f}%** of IDs from Google, Criteo, and Magnite are successfully resolved to entity names in this selection.")
+            st.markdown(f"📈 **Sellers.json Match Rate:** **{match_rate:.1f}%** of IDs from Google and Magnite are successfully resolved to entity names in this selection.")
         else:
-            st.markdown("📈 **Sellers.json Match Rate:** No records from Google/Criteo/Magnite found in this selection.")
+            st.markdown("📈 **Sellers.json Match Rate:** No records from Google/Magnite found in this selection.")
 
 with tab2:
     st.markdown("## 💡 How Programmatic Supply Chains Work")
