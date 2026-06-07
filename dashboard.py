@@ -466,3 +466,12 @@ with tab2:
 <div style="margin-top: 15px; font-size: 11px; color: #64748B; font-style: italic;">Lists authorized seller accounts</div>
 </div>
 </div>""", unsafe_allow_html=True)
+    
+    st.markdown("### 🏷️ The Brand & Advertiser Perspective (Nike, Adidas, Puma)")
+    st.markdown("""
+    When analyzing the ad-tech ecosystem, it is common to wonder why major brand websites (like **Nike, Adidas, Puma, Apple, or Samsung**) do not have publicly available `ads.txt` files on their root domains.
+    
+    *   **They are Buyers, not Sellers:** Brand websites are commercial storefronts or corporate portals designed to sell their own products. They do not monetize their web traffic by selling display ad spaces to third-party networks, meaning they do not have digital inventory to declare via `ads.txt`.
+    *   **The Funding Source:** Instead of selling ad space, these brands act as the financial engine of the programmatic ecosystem. They write the checks.
+    *   **Bidding Governance:** Using DSPs, brands configure rules to ensure their dollars are spent efficiently. For example, a campaign manager at Nike setting up a campaign in *The Trade Desk* will configure bidder restrictions to **only buy DIRECT paths** on target publishers (like sports/news websites), automatically filtering out reseller lines to avoid extra fee margins.
+    """)
