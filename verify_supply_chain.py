@@ -5,8 +5,8 @@ import json
 import pandas as pd
 import requests
 
-# Categorized dictionary of top 25 Indian publishing domains
-PUBLISHERS_WITH_CATEGORIES = {
+# 1. Target Publishers for the Indian Market (Categorized, including Retail Media, Travel, and Q-Commerce)
+PUBLISHERS_IN = {
     # News & Media
     "timesofindia.indiatimes.com": "News & Media",
     "ndtv.com": "News & Media",
@@ -30,7 +30,6 @@ PUBLISHERS_WITH_CATEGORIES = {
     # Tech & Gaming
     "gadgets360.com": "Tech & Gaming",
     "digit.in": "Tech & Gaming",
-    "bgr.in": "Tech & Gaming",
     
     # Entertainment
     "filmibeat.com": "Entertainment",
@@ -38,9 +37,56 @@ PUBLISHERS_WITH_CATEGORIES = {
     "koimoi.com": "Entertainment",
     
     # Sports
-    "espncricinfo.com": "Sports",
     "sportskeeda.com": "Sports",
-    "cricbuzz.com": "Sports"
+    "cricbuzz.com": "Sports",
+    
+    # Retail Media, Quick Commerce, Travel & Aggregators
+    "nykaa.com": "Retail Media & E-Commerce",
+    "jiomart.com": "Retail Media & E-Commerce",
+    "swiggy.com": "Retail Media & E-Commerce",
+    "zepto.com": "Retail Media & E-Commerce",
+    "makemytrip.com": "Retail Media & E-Commerce",
+    "ixigo.com": "Retail Media & E-Commerce",
+    "cleartrip.com": "Retail Media & E-Commerce",
+    "cardekho.com": "Retail Media & E-Commerce"
+}
+
+# 2. Target Publishers for the US Market (Categorized, including Travel and E-Commerce aggregates)
+PUBLISHERS_US = {
+    # News & Media
+    "nytimes.com": "News & Media",
+    "cnn.com": "News & Media",
+    "washingtonpost.com": "News & Media",
+    "usatoday.com": "News & Media",
+    "nypost.com": "News & Media",
+    
+    # Finance & Business
+    "forbes.com": "Finance & Business",
+    "bloomberg.com": "Finance & Business",
+    "cnbc.com": "Finance & Business",
+    "businessinsider.com": "Finance & Business",
+    
+    # Tech & Gaming
+    "cnet.com": "Tech & Gaming",
+    "theverge.com": "Tech & Gaming",
+    "ign.com": "Tech & Gaming",
+    "wired.com": "Tech & Gaming",
+    
+    # Entertainment
+    "buzzfeed.com": "Entertainment",
+    "variety.com": "Entertainment",
+    "hollywoodreporter.com": "Entertainment",
+    "people.com": "Entertainment",
+    
+    # Sports
+    "espn.com": "Sports",
+    "bleacherreport.com": "Sports",
+    
+    # Retail Media & E-Commerce / Travel aggregates
+    "tripadvisor.com": "Retail Media & E-Commerce",
+    "expedia.com": "Retail Media & E-Commerce",
+    "zillow.com": "Retail Media & E-Commerce",
+    "redfin.com": "Retail Media & E-Commerce"
 }
 
 CACHE_DIR = ".cache"
@@ -149,7 +195,6 @@ def scrape_ads_txt(domain, category, timeout=15):
     try:
         response = requests.get(url, headers=HEADERS, timeout=timeout, allow_redirects=True)
         if response.status_code != 200:
-            # If standard root domain fails, try with www
             if not domain.startswith("www."):
                 alt_url = f"https://www.{domain}/ads.txt"
                 print(f"  Received status {response.status_code}. Retrying with {alt_url}...")
@@ -184,7 +229,7 @@ def scrape_ads_txt(domain, category, timeout=15):
             elif "RESELLER" in relationship:
                 relationship = "RESELLER"
             else:
-                continue # Skip invalid relationship lines
+                continue
                 
             records.append({
                 "publisher_domain": domain,
@@ -204,32 +249,24 @@ def scrape_ads_txt(domain, category, timeout=15):
         
     return []
 
-def main():
-    print("==========================================================")
-    print("STEP 1: Fetching and parsing sellers.json for Google, Criteo, Magnite...")
-    print("==========================================================")
-    mappings = load_sellers_json_mappings()
+def scrape_market(market_name, publishers_dict, mappings):
+    """
+    Scrapes ads.txt files for a given market, correlates with sellers.json mappings, and saves to CSV.
+    """
+    print(f"\n==========================================================")
+    print(f"SCRAPING MARKET: {market_name.upper()} ({len(publishers_dict)} domains)")
+    print(f"==========================================================")
     
-    print("\n==========================================================")
-    print("STEP 2: Scraping ads.txt for 25 top Indian domains...")
-    print("==========================================================")
-    
-    all_ads_records = []
-    for domain, category in PUBLISHERS_WITH_CATEGORIES.items():
+    market_records = []
+    for domain, category in publishers_dict.items():
         records = scrape_ads_txt(domain, category)
-        all_ads_records.extend(records)
-        # Sleep for rate limiting and politeness
+        market_records.extend(records)
         time.sleep(1.0)
         
-    print(f"\nScraped total of {len(all_ads_records)} raw records from ads.txt files.")
-    
-    print("\n==========================================================")
-    print("STEP 3 & 4: Correlation Engine - Matching ads.txt with sellers.json...")
-    print("==========================================================")
+    print(f"\nScraped total of {len(market_records)} raw records for {market_name.upper()}.")
     
     correlated_records = []
-    
-    for rec in all_ads_records:
+    for rec in market_records:
         pub_domain = rec["publisher_domain"]
         pub_cat = rec["publisher_category"]
         ssp_domain = rec["ssp_domain"]
@@ -249,7 +286,6 @@ def main():
         
         if mapping_key:
             ssp_map = mappings[mapping_key]
-            # Match account ID
             if seller_id in ssp_map:
                 info = ssp_map[seller_id]
                 legal_entity = info["name"]
@@ -269,17 +305,31 @@ def main():
             "verified_legal_entity": legal_entity
         })
         
-    # Create DataFrame
     df = pd.DataFrame(correlated_records)
     
-    # Save to CSV
-    output_filename = "indian_adtech_supply_chain.csv"
+    # Save to file
+    output_filename = f"{market_name.lower()}_adtech_supply_chain.csv"
     df.to_csv(output_filename, index=False)
-    print(f"\nSaved {len(df)} correlated supply chain records to '{output_filename}'.")
+    print(f"Saved {len(df)} correlated supply chain records to '{output_filename}'.")
+    return df
+
+def main():
+    print("==========================================================")
+    print("STEP 1: Fetching and parsing sellers.json for Google, Criteo, Magnite...")
+    print("==========================================================")
+    mappings = load_sellers_json_mappings()
     
-    # Print short summary
-    print("\nSummary of results by Category:")
-    print(df["publisher_category"].value_counts())
+    # Scrape India Market
+    df_in = scrape_market("indian", PUBLISHERS_IN, mappings)
+    
+    # Scrape US Market
+    df_us = scrape_market("us", PUBLISHERS_US, mappings)
+    
+    print("\n==========================================================")
+    print("SUMMARY OF GENERATED DATASETS:")
+    print(f"- Indian Market: {len(df_in)} paths saved to 'indian_adtech_supply_chain.csv'")
+    print(f"- US Market: {len(df_us)} paths saved to 'us_adtech_supply_chain.csv'")
+    print("==========================================================")
 
 if __name__ == "__main__":
     main()

@@ -7,7 +7,7 @@ import subprocess
 
 # Set page config for wide layout and premium title
 st.set_page_config(
-    page_title="Indian Programmatic Supply Chain Monitor",
+    page_title="Global Programmatic Supply Chain Auditor",
     page_icon="🛡️",
     layout="wide",
     initial_sidebar_state="expanded"
@@ -45,9 +45,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-CSV_FILE = "indian_adtech_supply_chain.csv"
-
-# Classification of SSP/Exchanges based on ad-tech roles
+# Mappings of SSP domains to their programmatic roles
 SSP_CLASSIFICATIONS = {
     # Global SSP / Exchange
     "google.com": "Global SSP / Exchange",
@@ -85,29 +83,55 @@ SSP_CLASSIFICATIONS = {
     "fyber.com": "Mobile SSP",
 }
 
+# Mappings of SSP domains to major DSP buyers connected via OpenRTB
+SSP_DSP_MAPPINGS = {
+    "google.com": ["Google DV360", "The Trade Desk", "Amazon DSP", "Yahoo DSP", "Adobe Advertising", "Criteo DSP"],
+    "pubmatic.com": ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "MediaMath", "Criteo DSP"],
+    "rubiconproject.com": ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "Beeswax", "Amobee"],
+    "magnite.com": ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "Beeswax", "Amobee"],
+    "criteo.com": ["Criteo DSP", "The Trade Desk", "Google DV360"],
+    "inmobi.com": ["InMobi DSP", "The Trade Desk", "Google DV360", "Liftoff", "AppLovin", "AdColony"],
+    "appnexus.com": ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "Xandr Invest", "MediaMath"],
+    "openx.com": ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "Adobe Advertising"],
+    "indexexchange.com": ["The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "MediaMath"],
+    "smartadserver.com": ["The Trade Desk", "Google DV360", "Equativ Buyer", "Yahoo DSP"],
+    "equativ.com": ["The Trade Desk", "Google DV360", "Equativ Buyer", "Yahoo DSP"],
+    "outbrain.com": ["Outbrain DSP / Zemanta", "The Trade Desk", "Google DV360", "Yahoo DSP"],
+    "taboola.com": ["Taboola Ads", "The Trade Desk", "Google DV360", "Yahoo DSP"],
+    "triplelift.com": ["The Trade Desk", "Google DV360", "Yahoo DSP", "MediaMath"],
+    "teads.tv": ["Teads Ad Manager", "The Trade Desk", "Google DV360", "Yahoo DSP"],
+    "teads.com": ["Teads Ad Manager", "The Trade Desk", "Google DV360", "Yahoo DSP"],
+    "unrulymedia.com": ["Tremor Video DSP", "The Trade Desk", "Google DV360", "Yahoo DSP"],
+    "video.unrulymedia.com": ["Tremor Video DSP", "The Trade Desk", "Google DV360", "Yahoo DSP"],
+}
+
 def classify_ssp(domain):
-    """Classifies an SSP domain into programmatic industry roles."""
     domain_lower = str(domain).lower()
-    # Direct lookup
     if domain_lower in SSP_CLASSIFICATIONS:
         return SSP_CLASSIFICATIONS[domain_lower]
-    # Wildcard lookup
     for key, role in SSP_CLASSIFICATIONS.items():
         if key in domain_lower:
             return role
-            
-    # Smart checks based on domain keywords
     if any(kw in domain_lower for kw in ["video", "outstream", "vdo", "play"]):
         return "Video SSP"
     elif any(kw in domain_lower for kw in ["mobi", "mobile", "unity", "app"]):
         return "Mobile SSP"
     elif any(kw in domain_lower for kw in ["native", "recommend", "widget"]):
         return "Native / Content Recommendation"
-        
     return "Other SSP / Intermediate"
 
+def get_connected_dsps(domain):
+    domain_lower = str(domain).lower()
+    if domain_lower in SSP_DSP_MAPPINGS:
+        return SSP_DSP_MAPPINGS[domain_lower]
+    for key, dsps in SSP_DSP_MAPPINGS.items():
+        if key in domain_lower:
+            return dsps
+    # Default fallback for untracked SSPs
+    return ["Google DV360", "The Trade Desk", "Major DSPs (via OpenRTB)"]
+
 def run_scraper():
-    """Runs the verify_supply_chain.py scraper script to generate the CSV dataset."""
+    """Runs the verify_supply_chain.py scraper script to generate the CSV datasets."""
     try:
         result = subprocess.run(["python", "verify_supply_chain.py"], capture_output=True, text=True, check=True)
         return True, result.stdout
@@ -115,12 +139,18 @@ def run_scraper():
         return False, str(e)
 
 # --- Sidebar Configuration ---
-st.sidebar.image("https://img.icons8.com/color/96/shield.png", width=70)
+st.sidebar.image("https://img.icons8.com/color/96/shield.png", width=65)
 st.sidebar.title("Supply Chain Control")
-st.sidebar.markdown("""
-Verify authorized digital sellers (ads.txt) against SSP mappings (sellers.json) for 25 top Indian publishers.
-""")
-st.sidebar.markdown("---")
+
+# Market Selector Toggle (India vs US)
+selected_market = st.sidebar.radio(
+    "Select Target Market",
+    ["🇮🇳 India", "🇺🇸 United States"],
+    horizontal=True
+)
+
+market_suffix = "indian" if "India" in selected_market else "us"
+CSV_FILE = f"{market_suffix}_adtech_supply_chain.csv"
 
 # Error handling: check if the CSV file exists
 if not os.path.exists(CSV_FILE):
@@ -128,7 +158,7 @@ if not os.path.exists(CSV_FILE):
     st.info("The verification dataset needs to be scraped and compiled. You can trigger the scraper directly using the button below.")
     
     if st.button("🚀 Run Scraper & Verify Supply Chains"):
-        with st.spinner("Scraping 25 publishers & parsing sellers.json (this may take 45 seconds)..."):
+        with st.spinner("Scraping target publishers & parsing sellers.json (this may take 45-60 seconds)..."):
             success, log_output = run_scraper()
             if success:
                 st.success("✅ Supply chain verification completed successfully!")
@@ -140,14 +170,17 @@ if not os.path.exists(CSV_FILE):
 
 # --- Load Dataset ---
 @st.cache_data
-def load_data():
-    df_raw = pd.read_csv(CSV_FILE)
+def load_data(file_path):
+    df_raw = pd.read_csv(file_path)
     df_raw["ssp_classification"] = df_raw["ssp_domain"].apply(classify_ssp)
+    df_raw["connected_dsps"] = df_raw["ssp_domain"].apply(get_connected_dsps)
     return df_raw
 
-df = load_data()
+df = load_data(CSV_FILE)
 
 # --- Sidebar Dual-Filter Engine ---
+st.sidebar.markdown("### Filters")
+
 # Filter 1: Publisher Category
 cat_options = ["All Categories"] + sorted(list(df["publisher_category"].unique()))
 selected_cat = st.sidebar.selectbox("Select Publisher Category", cat_options, index=0)
@@ -159,7 +192,7 @@ else:
     df_filtered_cat = df
 
 pub_options = ["All Publishers"] + sorted(list(df_filtered_cat["publisher_domain"].unique()))
-selected_pub = st.sidebar.selectbox("Select Indian Publisher", pub_options, index=0)
+selected_pub = st.sidebar.selectbox("Select Publisher Domain", pub_options, index=0)
 
 # Filter 3: Ad Tech Network (Interconnected with Category & Publisher)
 df_filtered_pub = df_filtered_cat.copy()
@@ -169,6 +202,12 @@ if selected_pub != "All Publishers":
 net_options = ["All Networks"] + sorted(list(df_filtered_pub["ssp_domain"].unique()))
 selected_net = st.sidebar.selectbox("Select Ad Tech Network", net_options, index=0)
 
+# Filter 4: DSP Compatibility Filter
+st.sidebar.markdown("---")
+st.sidebar.markdown("### DSP Compatibility Audit")
+dsp_list = ["All DSPs", "The Trade Desk", "Google DV360", "Amazon DSP", "Yahoo DSP", "Criteo DSP", "InMobi DSP", "Liftoff"]
+selected_dsp = st.sidebar.selectbox("Filter by Connected DSP Buyer", dsp_list, index=0)
+
 # Apply all filters to the final dataset
 df_filtered = df.copy()
 if selected_cat != "All Categories":
@@ -177,12 +216,14 @@ if selected_pub != "All Publishers":
     df_filtered = df_filtered[df_filtered["publisher_domain"] == selected_pub]
 if selected_net != "All Networks":
     df_filtered = df_filtered[df_filtered["ssp_domain"] == selected_net]
+if selected_dsp != "All DSPs":
+    df_filtered = df_filtered[df_filtered["connected_dsps"].apply(lambda x: selected_dsp in x)]
 
 # --- Main Dashboard Header ---
-st.markdown("""
+st.markdown(f"""
     <div class="app-header">
-        <h1>Programmatic Supply Chain Auditor 🇮🇳</h1>
-        <p>Analyzing programmatic supply paths and verifying intermediary legal identities across news, finance, sports, tech, and entertainment.</p>
+        <h1>Programmatic Supply Chain Auditor - {selected_market[4:]}</h1>
+        <p>Analyzing programmatic supply paths, verifying sellers.json entities, and auditing DSP-buyer compatibility.</p>
     </div>
 """, unsafe_allow_html=True)
 
@@ -190,6 +231,10 @@ st.markdown("""
 tab1, tab2 = st.tabs(["📊 Supply Chain Auditor", "💡 Programmatic Supply Chain Explained"])
 
 with tab1:
+    # --- Criteo Market Notice (only for India) ---
+    if "India" in selected_market:
+        st.info("💡 **India Criteo Insight:** Criteo has lower direct publisher adoption in India compared to Google or PubMatic. Criteo primarily purchases Indian traffic via header-bidding reseller paths rather than direct integrations.")
+
     # --- Executive KPI Cards ---
     total_paths = len(df_filtered)
     direct_paths = len(df_filtered[df_filtered["relationship"] == "DIRECT"])
@@ -322,23 +367,28 @@ with tab1:
 
     # --- Filtered Raw Data Ledger ---
     st.markdown("### 📋 Supply Chain Data Ledger")
-    st.markdown("Use columns' headers to search, filter, and sort the raw records. Includes categories and classified SSP roles.")
+    st.markdown("Use columns' headers to search, filter, and sort. Includes connected downstream DSPs.")
+
+    # Convert list of DSPs to a clean comma-separated string for UI presentation
+    df_presentation = df_filtered.copy()
+    df_presentation["connected_dsps_str"] = df_presentation["connected_dsps"].apply(lambda x: ", ".join(x))
 
     # Rename columns for presentation
-    df_presentation = df_filtered.rename(columns={
+    df_presentation = df_presentation.rename(columns={
         "publisher_domain": "Publisher Domain",
         "publisher_category": "Publisher Category",
         "ssp_domain": "SSP/Exchange Domain",
         "ssp_classification": "SSP Role Classification",
         "seller_id": "Seller/Account ID",
         "relationship": "Supply Relationship",
-        "verified_legal_entity": "Verified Legal Entity Name"
+        "verified_legal_entity": "Verified Legal Entity Name",
+        "connected_dsps_str": "Compatible DSP Buyers"
     })
 
     st.dataframe(
         df_presentation,
         use_container_width=True,
-        column_order=["Publisher Domain", "Publisher Category", "SSP/Exchange Domain", "SSP Role Classification", "Seller/Account ID", "Supply Relationship", "Verified Legal Entity Name"],
+        column_order=["Publisher Domain", "Publisher Category", "SSP/Exchange Domain", "SSP Role Classification", "Seller/Account ID", "Supply Relationship", "Verified Legal Entity Name", "Compatible DSP Buyers"],
         height=400
     )
 
@@ -346,7 +396,7 @@ with tab1:
     st.markdown("---")
     col_info1, col_info2 = st.columns(2)
     with col_info1:
-        st.markdown("💡 **Tip:** Use the sidebar category filters to compare programmatic monetization patterns (e.g. News vs. Sports). Sports sites frequently use more Video and Outstream SSPs compared to News sites.")
+        st.markdown("💡 **Audit Tip:** Use the **DSP Compatibility** filter in the sidebar to review SPO paths for specific platforms. Selecting 'The Trade Desk' will highlight only the SSP/Exchange connections that TTD actively bids on.")
     with col_info2:
         top3_subset = df_filtered[df_filtered["ssp_domain"].isin(["google.com", "criteo.com", "rubiconproject.com", "magnite.com"])]
         if len(top3_subset) > 0:
@@ -417,11 +467,3 @@ with tab2:
         </div>
     </div>
     """, unsafe_allow_html=True)
-    
-    st.markdown("### 🛡️ Why Transparency Matters in the Indian Market")
-    st.markdown("""
-    The Indian digital programmatic market has experienced rapid growth, making it a target for domain spoofing and arbitrage. 
-    By auditing the relationship type (`DIRECT` vs. `RESELLER`) and verifying that account IDs resolve to valid corporate entities, 
-    advertisers can ensure they buy inventory directly from the source (the publisher) rather than paying intermediate reseller fees, 
-    retaining maximum return on ad spend (ROAS).
-    """)
