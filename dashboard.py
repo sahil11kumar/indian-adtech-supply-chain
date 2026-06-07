@@ -234,9 +234,10 @@ else:
     df_filtered = df_filtered[df_filtered["relationship"].isin([])]
 
 # --- Main Dashboard Header ---
+clean_market = selected_market.split(" ", 1)[1] if " " in selected_market else selected_market
 st.markdown(f"""
     <div class="app-header">
-        <h1>Programmatic Supply Chain Auditor - {selected_market[4:]}</h1>
+        <h1>Programmatic Supply Chain Auditor - {clean_market}</h1>
         <p>Analyzing programmatic supply paths, verifying sellers.json entities, and auditing DSP-buyer compatibility.</p>
     </div>
 """, unsafe_allow_html=True)
@@ -419,106 +420,106 @@ with tab1:
 
 with tab2:
     st.markdown("""
-<div style="font-family: 'Inter', -apple-system, sans-serif; color: #1E293B;">
-<div style="background: linear-gradient(135deg, rgba(30, 58, 138, 0.05) 0%, rgba(13, 148, 136, 0.05) 100%); border-left: 5px solid #0D9488; padding: 22px; border-radius: 8px; margin-bottom: 25px;">
-<h3 style="margin-top: 0; color: #0F766E; font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">🛡️ The Foundation of Programmatic Transparency</h3>
-<p style="margin: 6px 0 0 0; line-height: 1.6; font-size: 0.95rem; color: #334155;">
+<div style="font-family: 'Inter', -apple-system, sans-serif; color: var(--text-color, #1E293B);">
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(13, 148, 136, 0.08) 100%); border-left: 5px solid #0D9488; padding: 22px; border-radius: 8px; margin-bottom: 25px;">
+<h3 style="margin-top: 0; color: #0D9488; font-size: 1.35rem; font-weight: 700; display: flex; align-items: center; gap: 8px;">🛡️ The Foundation of Programmatic Transparency</h3>
+<p style="margin: 6px 0 0 0; line-height: 1.6; font-size: 0.95rem; color: var(--text-color, #334155);">
 Programmatic advertising utilizes automated real-time auctions to buy and sell ad impressions. To prevent fraud, domain spoofing, and hidden arbitrage fees, the industry relies on standard transparency protocols defined by the <b>IAB Tech Lab</b>.
 </p>
 </div>
 <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;">
-<div style="flex: 1; min-width: 280px; background-color: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);">
+<div style="flex: 1; min-width: 280px; background-color: var(--secondary-background-color, #FFFFFF); border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
 <span style="font-size: 24px;">📄</span>
-<h4 style="margin: 0; color: #1E3A8A; font-size: 1.15rem; font-weight: 700;">ads.txt</h4>
+<h4 style="margin: 0; color: #3B82F6; font-size: 1.15rem; font-weight: 700;">ads.txt</h4>
 </div>
-<p style="font-size: 0.88rem; line-height: 1.5; margin: 0; color: #475569;">
+<p style="font-size: 0.88rem; line-height: 1.5; margin: 0; color: var(--text-color, #475569); opacity: 0.95;">
 <b>Authorized Digital Sellers (Sell-Side)</b><br>
 A public text file hosted on the publisher's root domain (e.g., <i>publisher.com/ads.txt</i>). It declares exactly which ad exchanges/SSPs are authorized to sell the publisher's ad space, mapping them to specific account IDs.
 </p>
 </div>
-<div style="flex: 1; min-width: 280px; background-color: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);">
+<div style="flex: 1; min-width: 280px; background-color: var(--secondary-background-color, #FFFFFF); border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
 <span style="font-size: 24px;">📇</span>
-<h4 style="margin: 0; color: #0D9488; font-size: 1.15rem; font-weight: 700;">sellers.json</h4>
+<h4 style="margin: 0; color: #10B981; font-size: 1.15rem; font-weight: 700;">sellers.json</h4>
 </div>
-<p style="font-size: 0.88rem; line-height: 1.5; margin: 0; color: #475569;">
+<p style="font-size: 0.88rem; line-height: 1.5; margin: 0; color: var(--text-color, #475569); opacity: 0.95;">
 <b>SSP Seller Directory (Exchange-Side)</b><br>
 A public JSON directory hosted by ad networks/SSPs (e.g., <i>ssp.com/sellers.json</i>). It maps account IDs back to the real legal entity name of the seller, identifying whether they are a <code>PUBLISHER</code> (direct) or an <code>INTERMEDIARY</code> (reseller).
 </p>
 </div>
-<div style="flex: 1; min-width: 280px; background-color: white; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.03);">
+<div style="flex: 1; min-width: 280px; background-color: var(--secondary-background-color, #FFFFFF); border: 1px solid rgba(128, 128, 128, 0.2); border-radius: 12px; padding: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02);">
 <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 12px;">
 <span style="font-size: 24px;">🔗</span>
-<h4 style="margin: 0; color: #B45309; font-size: 1.15rem; font-weight: 700;">schain Object</h4>
+<h4 style="margin: 0; color: #F59E0B; font-size: 1.15rem; font-weight: 700;">schain Object</h4>
 </div>
-<p style="font-size: 0.88rem; line-height: 1.5; margin: 0; color: #475569;">
+<p style="font-size: 0.88rem; line-height: 1.5; margin: 0; color: var(--text-color, #475569); opacity: 0.95;">
 <b>SupplyChain Object (OpenRTB Protocol)</b><br>
 A digital record passed in real-time within the bid request. It acts like a flight manifest, recording every intermediary node that touched the bid request from the publisher to the auction house, preventing spoofed hops.
 </p>
 </div>
 </div>
-<h3 style="color: #1E3A8A; font-size: 1.25rem; font-weight: 700; margin-top: 30px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">⚡ The Real-Time Auditing Flow</h3>
-<p style="margin-top: 0; margin-bottom: 20px; font-size: 0.95rem; color: #475569; line-height: 1.5;">
+<h3 style="color: var(--text-color, #1E293B); font-size: 1.25rem; font-weight: 700; margin-top: 30px; margin-bottom: 15px; display: flex; align-items: center; gap: 8px;">⚡ The Real-Time Auditing Flow</h3>
+<p style="margin-top: 0; margin-bottom: 20px; font-size: 0.95rem; color: var(--text-color, #475569); opacity: 0.9; line-height: 1.5;">
 When an ad slot loads on a publisher's site, a Demand-Side Platform (DSP) must audit the supply path in under <b>100 milliseconds</b> before deciding to bid:
 </p>
 <div style="display: flex; flex-direction: column; gap: 14px; margin-bottom: 35px;">
-<div style="display: flex; gap: 15px; background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
+<div style="display: flex; gap: 15px; background: var(--secondary-background-color, #FFFFFF); border: 1px solid rgba(128, 128, 128, 0.15); border-radius: 10px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
 <div style="background: #3B82F6; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0;">1</div>
 <div style="flex: 1;">
-<h4 style="margin: 0 0 4px 0; color: #1E293B; font-size: 0.98rem; font-weight: 700;">Bid Request Generation & schain Entry</h4>
-<p style="margin: 0; font-size: 0.88rem; color: #475569; line-height: 1.45;">
+<h4 style="margin: 0 0 4px 0; color: var(--text-color, #1E293B); font-size: 0.98rem; font-weight: 700;">Bid Request Generation & schain Entry</h4>
+<p style="margin: 0; font-size: 0.88rem; color: var(--text-color, #475569); opacity: 0.9; line-height: 1.45;">
 The publisher's webpage calls an SSP (e.g. PubMatic). The SSP constructs an OpenRTB bid request, logs its domain and member account ID inside the <code>schain</code> object, and sends it to demand buyers.
 </p>
 </div>
 </div>
-<div style="display: flex; gap: 15px; background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
+<div style="display: flex; gap: 15px; background: var(--secondary-background-color, #FFFFFF); border: 1px solid rgba(128, 128, 128, 0.15); border-radius: 10px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
 <div style="background: #10B981; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0;">2</div>
 <div style="flex: 1;">
-<h4 style="margin: 0 0 4px 0; color: #1E293B; font-size: 0.98rem; font-weight: 700;">Sell-Side Authorization Cross-Reference (ads.txt)</h4>
-<p style="margin: 0; font-size: 0.88rem; color: #475569; line-height: 1.45;">
+<h4 style="margin: 0 0 4px 0; color: var(--text-color, #1E293B); font-size: 0.98rem; font-weight: 700;">Sell-Side Authorization Cross-Reference (ads.txt)</h4>
+<p style="margin: 0; font-size: 0.88rem; color: var(--text-color, #475569); opacity: 0.9; line-height: 1.45;">
 The DSP (e.g. The Trade Desk) receives the request, fetches the publisher domain's <code>ads.txt</code> file, and verifies that the sending SSP's domain and the listed Seller ID are explicitly authorized.
 </p>
 </div>
 </div>
-<div style="display: flex; gap: 15px; background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
+<div style="display: flex; gap: 15px; background: var(--secondary-background-color, #FFFFFF); border: 1px solid rgba(128, 128, 128, 0.15); border-radius: 10px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
 <div style="background: #F59E0B; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0;">3</div>
 <div style="flex: 1;">
-<h4 style="margin: 0 0 4px 0; color: #1E293B; font-size: 0.98rem; font-weight: 700;">Legal Entity Authentication (sellers.json)</h4>
-<p style="margin: 0; font-size: 0.88rem; color: #475569; line-height: 1.45;">
+<h4 style="margin: 0 0 4px 0; color: var(--text-color, #1E293B); font-size: 0.98rem; font-weight: 700;">Legal Entity Authentication (sellers.json)</h4>
+<p style="margin: 0; font-size: 0.88rem; color: var(--text-color, #475569); opacity: 0.9; line-height: 1.45;">
 The DSP checks the SSP's <code>sellers.json</code> directory. It resolves the Seller ID to its registered corporate name and audits whether the contract relationship (DIRECT vs. RESELLER) matches the declaration.
 </p>
 </div>
 </div>
-<div style="display: flex; gap: 15px; background: white; border: 1px solid #E2E8F0; border-radius: 10px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
+<div style="display: flex; gap: 15px; background: var(--secondary-background-color, #FFFFFF); border: 1px solid rgba(128, 128, 128, 0.15); border-radius: 10px; padding: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.01);">
 <div style="background: #EC4899; color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 0.9rem; flex-shrink: 0;">4</div>
 <div style="flex: 1;">
-<h4 style="margin: 0 0 4px 0; color: #1E293B; font-size: 0.98rem; font-weight: 700;">Bidding Execution or Fraud Prevention Drop</h4>
-<p style="margin: 0; font-size: 0.88rem; color: #475569; line-height: 1.45;">
+<h4 style="margin: 0 0 4px 0; color: var(--text-color, #1E293B); font-size: 0.98rem; font-weight: 700;">Bidding Execution or Fraud Prevention Drop</h4>
+<p style="margin: 0; font-size: 0.88rem; color: var(--text-color, #475569); opacity: 0.9; line-height: 1.45;">
 If all checks match, the DSP submits the brand's bid. If any mismatch occurs (e.g. ID missing in <code>sellers.json</code>, or unauthorized in <code>ads.txt</code>), the DSP drops the bid request immediately, blocking the bid.
 </p>
 </div>
 </div>
 </div>
-<h3 style="color: #1E3A8A; font-size: 1.25rem; font-weight: 700; margin-top: 30px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px;">❓ Frequently Asked Questions</h3>
+<h3 style="color: var(--text-color, #1E293B); font-size: 1.25rem; font-weight: 700; margin-top: 30px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px;">❓ Frequently Asked Questions</h3>
 <div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 20px;">
-<div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;">
-<h4 style="margin-top: 0; color: #1E3A8A; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Q: Why don't brand sites like Nike, Adidas, or Puma host ads.txt files?</h4>
-<p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: #475569;">
+<div style="background-color: var(--secondary-background-color, #F8FAFC); border: 1px solid rgba(128, 128, 128, 0.15); border-radius: 12px; padding: 20px;">
+<h4 style="margin-top: 0; color: #3B82F6; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Q: Why don't brand sites like Nike, Adidas, or Puma host ads.txt files?</h4>
+<p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-color, #475569); opacity: 0.95;">
 <b>Because they are buy-side advertisers, not sell-side publishers.</b><br>
 An <code>ads.txt</code> file is designed to govern <i>sellers</i>. Storefronts like Nike, Adidas, Apple, or Puma do not sell third-party banner spaces on their product pages. They only buy inventory across news, entertainment, and sports sites to run their product ads. Since they have no digital ad inventory to sell, they have no reason to host an <code>ads.txt</code> file. Instead, their campaign managers set strict bid rules in their DSPs to only buy from verified publisher lines.
 </p>
 </div>
-<div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;">
-<h4 style="margin-top: 0; color: #1E3A8A; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Q: Why don't Demand-Side Platforms (DSPs) host ads.txt or sellers.json?</h4>
-<p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: #475569;">
+<div style="background-color: var(--secondary-background-color, #F8FAFC); border: 1px solid rgba(128, 128, 128, 0.15); border-radius: 12px; padding: 20px;">
+<h4 style="margin-top: 0; color: #3B82F6; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Q: Why don't Demand-Side Platforms (DSPs) host ads.txt or sellers.json?</h4>
+<p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-color, #475569); opacity: 0.95;">
 <b>DSPs act as buyers and auditors.</b><br>
 A DSP (like The Trade Desk) represents the buyer. Since a DSP does not route payouts to publishers or sell ad space, it has no sell-side directories. Instead, the DSP acts as the gatekeeper. It constantly crawls, processes, and stores the public <code>ads.txt</code> and <code>sellers.json</code> files hosted by publishers and SSPs worldwide to audit every bid request in real-time.
 </p>
 </div>
-<div style="background-color: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 20px;">
-<h4 style="margin-top: 0; color: #1E3A8A; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Q: What is the difference between a DIRECT and RESELLER relationship?</h4>
-<p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: #475569;">
+<div style="background-color: var(--secondary-background-color, #F8FAFC); border: 1px solid rgba(128, 128, 128, 0.15); border-radius: 12px; padding: 20px;">
+<h4 style="margin-top: 0; color: #3B82F6; font-size: 1.05rem; font-weight: 700; margin-bottom: 8px;">Q: What is the difference between a DIRECT and RESELLER relationship?</h4>
+<p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-color, #475569); opacity: 0.95;">
 <b>Direct contracts vs. Intermediary wrappers.</b><br>
 - A <b>DIRECT</b> path indicates the SSP has a direct contract with the publisher and issues payouts directly to them.<br>
 - A <b>RESELLER</b> path indicates the SSP pays a third-party intermediary network or wrapper that holds the direct contract with the publisher.<br>
