@@ -5,22 +5,43 @@ import json
 import pandas as pd
 import requests
 
-# 1. INPUT DATA: Top Indian publishing domains across news, finance, and entertainment
-PUBLISHING_DOMAINS = [
-    "moneycontrol.com",
-    "timesofindia.indiatimes.com",
-    "ndtv.com",
-    "indianexpress.com",
-    "hindustantimes.com",
-    "thehindu.com",
-    "news18.com",
-    "livemint.com",
-    "firstpost.com",
-    "scroll.in",
-    "republicworld.com",
-    "indiatvnews.com",
-    "gadgets360.com"
-]
+# Categorized dictionary of top 25 Indian publishing domains
+PUBLISHERS_WITH_CATEGORIES = {
+    # News & Media
+    "timesofindia.indiatimes.com": "News & Media",
+    "ndtv.com": "News & Media",
+    "indianexpress.com": "News & Media",
+    "hindustantimes.com": "News & Media",
+    "thehindu.com": "News & Media",
+    "news18.com": "News & Media",
+    "republicworld.com": "News & Media",
+    "indiatvnews.com": "News & Media",
+    "scroll.in": "News & Media",
+    "dainikbhaskar.com": "News & Media",
+    "jagran.com": "News & Media",
+    
+    # Finance & Business
+    "moneycontrol.com": "Finance & Business",
+    "livemint.com": "Finance & Business",
+    "economictimes.indiatimes.com": "Finance & Business",
+    "financialexpress.com": "Finance & Business",
+    "business-standard.com": "Finance & Business",
+    
+    # Tech & Gaming
+    "gadgets360.com": "Tech & Gaming",
+    "digit.in": "Tech & Gaming",
+    "bgr.in": "Tech & Gaming",
+    
+    # Entertainment
+    "filmibeat.com": "Entertainment",
+    "pinkvilla.com": "Entertainment",
+    "koimoi.com": "Entertainment",
+    
+    # Sports
+    "espncricinfo.com": "Sports",
+    "sportskeeda.com": "Sports",
+    "cricbuzz.com": "Sports"
+}
 
 CACHE_DIR = ".cache"
 os.makedirs(CACHE_DIR, exist_ok=True)
@@ -118,12 +139,12 @@ def load_sellers_json_mappings():
                 
     return mappings
 
-def scrape_ads_txt(domain, timeout=15):
+def scrape_ads_txt(domain, category, timeout=15):
     """
     Fetches the public ads.txt file for a domain and parses it.
     """
     url = f"https://{domain}/ads.txt"
-    print(f"Scraping ads.txt for {domain}...")
+    print(f"Scraping ads.txt for {domain} ({category})...")
     
     try:
         response = requests.get(url, headers=HEADERS, timeout=timeout, allow_redirects=True)
@@ -167,6 +188,7 @@ def scrape_ads_txt(domain, timeout=15):
                 
             records.append({
                 "publisher_domain": domain,
+                "publisher_category": category,
                 "ssp_domain": ssp_domain,
                 "seller_id": seller_id,
                 "relationship": relationship
@@ -189,12 +211,12 @@ def main():
     mappings = load_sellers_json_mappings()
     
     print("\n==========================================================")
-    print("STEP 2: Scraping ads.txt for top Indian domains...")
+    print("STEP 2: Scraping ads.txt for 25 top Indian domains...")
     print("==========================================================")
     
     all_ads_records = []
-    for domain in PUBLISHING_DOMAINS:
-        records = scrape_ads_txt(domain)
+    for domain, category in PUBLISHERS_WITH_CATEGORIES.items():
+        records = scrape_ads_txt(domain, category)
         all_ads_records.extend(records)
         # Sleep for rate limiting and politeness
         time.sleep(1.0)
@@ -209,6 +231,7 @@ def main():
     
     for rec in all_ads_records:
         pub_domain = rec["publisher_domain"]
+        pub_cat = rec["publisher_category"]
         ssp_domain = rec["ssp_domain"]
         seller_id = rec["seller_id"]
         rel = rec["relationship"]
@@ -230,7 +253,6 @@ def main():
             if seller_id in ssp_map:
                 info = ssp_map[seller_id]
                 legal_entity = info["name"]
-                # Append active state or seller type details if we want, but name is main
                 if not info["is_active"]:
                     legal_entity += " [INACTIVE]"
             else:
@@ -240,6 +262,7 @@ def main():
             
         correlated_records.append({
             "publisher_domain": pub_domain,
+            "publisher_category": pub_cat,
             "ssp_domain": ssp_domain,
             "seller_id": seller_id,
             "relationship": rel,
@@ -255,8 +278,8 @@ def main():
     print(f"\nSaved {len(df)} correlated supply chain records to '{output_filename}'.")
     
     # Print short summary
-    print("\nSummary of results:")
-    print(df["ssp_domain"].value_counts().head(10))
+    print("\nSummary of results by Category:")
+    print(df["publisher_category"].value_counts())
 
 if __name__ == "__main__":
     main()
