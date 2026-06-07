@@ -243,7 +243,7 @@ st.markdown(f"""
 """, unsafe_allow_html=True)
 
 # Create App Tabs
-tab1, tab2 = st.tabs(["📊 Supply Chain Auditor", "💡 Programmatic Supply Chain Explained"])
+tab1, tab2, tab3 = st.tabs(["📊 Supply Chain Auditor", "💡 Programmatic Supply Chain Explained", "🧠 Executive Briefing & Insights"])
 
 with tab1:
 
@@ -524,6 +524,179 @@ A DSP (like The Trade Desk) represents the buyer. Since a DSP does not route pay
 - A <b>DIRECT</b> path indicates the SSP has a direct contract with the publisher and issues payouts directly to them.<br>
 - A <b>RESELLER</b> path indicates the SSP pays a third-party intermediary network or wrapper that holds the direct contract with the publisher.<br>
 Buyers prefer DIRECT paths because they eliminate extra tech-fee margins taken by intermediaries, ensuring maximum budget reaches the publisher.
+</p>
+</div>
+</div>
+</div>
+""", unsafe_allow_html=True)
+
+with tab3:
+    st.markdown("""
+<div style="font-family: 'Inter', -apple-system, sans-serif; color: var(--text-color, #E2E8F0);">
+<div style="background: linear-gradient(135deg, rgba(59, 130, 246, 0.15) 0%, rgba(13, 148, 136, 0.15) 100%); border-left: 5px solid #3B82F6; padding: 22px; border-radius: 8px; margin-bottom: 25px;">
+<h3 style="margin-top: 0; color: #3B82F6; font-size: 1.35rem; font-weight: 700;">🧠 Executive Briefing: India vs. US Programmatic Divergence</h3>
+<p style="margin: 6px 0 0 0; line-height: 1.6; font-size: 0.95rem; color: var(--text-color, #E2E8F0);">
+A data-backed analysis for C-level executives (CEO, CTO, CPO) outlining the structural bloat, arbitrage leakage, and first-party data privacy exposures in global programmatic supply paths.
+</p>
+</div>
+<h3 style="color: var(--text-color, #F8FAFC); font-size: 1.25rem; font-weight: 700; margin-top: 30px; margin-bottom: 15px;">📊 Key Market Metrics Comparison</h3>
+<div style="overflow-x: auto; margin-bottom: 30px; border: 1px solid rgba(128,128,128,0.2); border-radius: 8px;">
+<table style="width: 100%; border-collapse: collapse; text-align: left; font-size: 0.9rem; background-color: var(--secondary-background-color, #1E293B);">
+<thead>
+<tr style="border-bottom: 2px solid rgba(128,128,128,0.3); background-color: rgba(128,128,128,0.05); font-size: 0.95rem;">
+<th style="padding: 12px; font-weight: 700; color: var(--text-color, #F8FAFC);">Audit Dimension</th>
+<th style="padding: 12px; font-weight: 700; color: #10B981;">🇮🇳 Indian Market</th>
+<th style="padding: 12px; font-weight: 700; color: #3B82F6;">🇺🇸 United States</th>
+<th style="padding: 12px; font-weight: 700; color: var(--text-color, #94A3B8);">Executive Takeaway</th>
+</tr>
+</thead>
+<tbody>
+<tr style="border-bottom: 1px solid rgba(128,128,128,0.15);">
+<td style="padding: 12px; font-weight: 600; color: var(--text-color, #F8FAFC);">Total Mapped Paths</td>
+<td style="padding: 12px; color: #10B981; font-weight: 600;">153,961 paths</td>
+<td style="padding: 12px; color: #3B82F6; font-weight: 600;">26,762 paths</td>
+<td style="padding: 12px; color: var(--text-color, #94A3B8);">India's supply chain is <b>5.7x more bloated</b>, driving high processing costs.</td>
+</tr>
+<tr style="border-bottom: 1px solid rgba(128,128,128,0.15);">
+<td style="padding: 12px; font-weight: 600; color: var(--text-color, #F8FAFC);">Direct vs. Reseller Ratio</td>
+<td style="padding: 12px; color: #10B981; font-weight: 600;">25.6% Direct / 74.4% Reseller</td>
+<td style="padding: 12px; color: #3B82F6; font-weight: 600;">35.9% Direct / 64.1% Reseller</td>
+<td style="padding: 12px; color: var(--text-color, #94A3B8);">US has <b>40% more direct paths</b>; India relies heavily on middle-men.</td>
+</tr>
+<tr style="border-bottom: 1px solid rgba(128,128,128,0.15);">
+<td style="padding: 12px; font-weight: 600; color: var(--text-color, #F8FAFC);">Avg. Paths per Publisher</td>
+<td style="padding: 12px; color: #10B981; font-weight: 600;">2,025.8 paths</td>
+<td style="padding: 12px; color: #3B82F6; font-weight: 600;">281.7 paths</td>
+<td style="padding: 12px; color: var(--text-color, #94A3B8);">Indian publishers use <b>7.2x more intermediaries</b> to monetize traffic.</td>
+</tr>
+<tr style="border-bottom: 1px solid rgba(128,128,128,0.15);">
+<td style="padding: 12px; font-weight: 600; color: var(--text-color, #F8FAFC);">Unlisted / Unknown IDs</td>
+<td style="padding: 12px; color: #10B981; font-weight: 600;">25.5% (1 in 4)</td>
+<td style="padding: 12px; color: #3B82F6; font-weight: 600;">13.4% (1 in 8)</td>
+<td style="padding: 12px; color: var(--text-color, #94A3B8);">Severe anonymity risk in India; 1 in 4 exchange connections is untraceable.</td>
+</tr>
+</tbody>
+</table>
+</div>
+""", unsafe_allow_html=True)
+
+    # Dynamic Insight Graphs
+    st.markdown("### 📈 Visualizing the Market Discrepancies")
+    col_g1, col_g2 = st.columns(2)
+
+    with col_g1:
+        # Chart 1: Direct vs. Reseller Ratio Comparison
+        ratio_data = pd.DataFrame([
+            {"Market": "India (IN)", "Supply Path": "Direct Paths", "Percentage": 25.6},
+            {"Market": "India (IN)", "Supply Path": "Reseller Paths", "Percentage": 74.4},
+            {"Market": "United States (US)", "Supply Path": "Direct Paths", "Percentage": 35.9},
+            {"Market": "United States (US)", "Supply Path": "Reseller Paths", "Percentage": 64.1}
+        ])
+        fig_ratios = px.bar(
+            ratio_data,
+            x="Market",
+            y="Percentage",
+            color="Supply Path",
+            barmode="stack",
+            color_discrete_map={"Direct Paths": "#10B981", "Reseller Paths": "#F59E0B"},
+            labels={"Percentage": "Percentage (%)"},
+            title="Direct vs. Reseller Path Distribution"
+        )
+        fig_ratios.update_layout(
+            margin=dict(l=10, r=10, t=35, b=10),
+            height=300,
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(family="Inter, sans-serif")
+        )
+        st.plotly_chart(fig_ratios, use_container_width=True)
+
+    with col_g2:
+        # Chart 2: Unlisted / Unknown IDs in Top SSPs
+        unlisted_data = pd.DataFrame([
+            {"Market": "India (IN)", "SSP Registry Status": "Verified Entities", "Percentage": 74.5},
+            {"Market": "India (IN)", "SSP Registry Status": "Unlisted/Unknown IDs", "Percentage": 25.5},
+            {"Market": "United States (US)", "SSP Registry Status": "Verified Entities", "Percentage": 86.6},
+            {"Market": "United States (US)", "SSP Registry Status": "Unlisted/Unknown IDs", "Percentage": 13.4}
+        ])
+        fig_unlisted = px.bar(
+            unlisted_data,
+            x="Market",
+            y="Percentage",
+            color="SSP Registry Status",
+            barmode="stack",
+            color_discrete_map={"Verified Entities": "#3B82F6", "Unlisted/Unknown IDs": "#EF4444"},
+            labels={"Percentage": "Percentage (%)"},
+            title="Sellers.json Compliance on Top Exchanges"
+        )
+        fig_unlisted.update_layout(
+            margin=dict(l=10, r=10, t=35, b=10),
+            height=300,
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(family="Inter, sans-serif")
+        )
+        st.plotly_chart(fig_unlisted, use_container_width=True)
+
+    # Chart 3: Retail Media Strategy
+    st.markdown("<br>", unsafe_allow_html=True)
+    st.markdown("#### 🛒 Indian Retail Media & E-Commerce Strategy Comparison")
+    retail_data = pd.DataFrame([
+        {"Publisher": "swiggy.com", "Path Type": "Direct Paths", "Paths": 1},
+        {"Publisher": "swiggy.com", "Path Type": "Reseller Paths", "Paths": 0},
+        {"Publisher": "zepto.com", "Path Type": "Direct Paths", "Paths": 3},
+        {"Publisher": "zepto.com", "Path Type": "Reseller Paths", "Paths": 1},
+        {"Publisher": "zomato.com", "Path Type": "Direct Paths", "Paths": 21},
+        {"Publisher": "zomato.com", "Path Type": "Reseller Paths", "Paths": 52},
+        {"Publisher": "bookmyshow.com", "Path Type": "Direct Paths", "Paths": 94},
+        {"Publisher": "bookmyshow.com", "Path Type": "Reseller Paths", "Paths": 356},
+        {"Publisher": "zigwheels.com", "Path Type": "Direct Paths", "Paths": 400},
+        {"Publisher": "zigwheels.com", "Path Type": "Reseller Paths", "Paths": 1532},
+        {"Publisher": "cardekho.com", "Path Type": "Direct Paths", "Paths": 402},
+        {"Publisher": "cardekho.com", "Path Type": "Reseller Paths", "Paths": 1541},
+        {"Publisher": "ixigo.com", "Path Type": "Direct Paths", "Paths": 665},
+        {"Publisher": "ixigo.com", "Path Type": "Reseller Paths", "Paths": 2841}
+    ])
+    fig_retail = px.bar(
+        retail_data,
+        x="Publisher",
+        y="Paths",
+        color="Path Type",
+        barmode="group",
+        color_discrete_map={"Direct Paths": "#10B981", "Reseller Paths": "#F59E0B"},
+        title="Path Bloat: Fortress Strategy (Swiggy/Zepto) vs. Open Reselling (Ixigo/Cardekho)"
+    )
+    fig_retail.update_layout(
+        margin=dict(l=10, r=10, t=35, b=10),
+        height=320,
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)',
+        font=dict(family="Inter, sans-serif")
+    )
+    st.plotly_chart(fig_retail, use_container_width=True)
+
+    st.markdown("""
+<div style="font-family: 'Inter', -apple-system, sans-serif; margin-top: 30px;">
+<div style="display: flex; flex-direction: column; gap: 20px; margin-bottom: 25px;">
+<div style="background-color: var(--secondary-background-color, #1E293B); border: 1px solid var(--border-color, #334155); border-radius: 12px; padding: 22px;">
+<h4 style="margin-top: 0; color: #EF4444; font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">🛡️ CTO Focus: The Anonymity & Fraud Tax</h4>
+<p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-color, #94A3B8);">
+<b>The Challenge</b>: Indian publishers operate at extreme complexity. <i>gizbot.com</i> has a massive <b>20,206 paths</b>, and 25.5% of all transacted IDs on top SSPs are unlisted or anonymous in <i>sellers.json</i> files.<br>
+<b>The "Aha" Insight</b>: This is not incremental demand; it is a severe security exposure. Anonymous seller IDs are highly vulnerable to domain spoofing, where bot farms inject fake traffic claiming to be premium domains. Bidding on these routes results in significant tech-fee leakage (each reseller takes a 10%-20% cut) and ad-fraud exposure, diluting ROI.
+</p>
+</div>
+<div style="background-color: var(--secondary-background-color, #1E293B); border: 1px solid var(--border-color, #334155); border-radius: 12px; padding: 22px;">
+<h4 style="margin-top: 0; color: #F59E0B; font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">🛒 CPO Focus: Retail Media Intent Data Leakage</h4>
+<p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-color, #94A3B8);">
+<b>The Challenge</b>: Comparing top Indian transactional apps reveals two distinct paths. Swiggy operates a direct-only supply chain (1 path, 100% Direct). Zomato opens up to **73 paths** (21 Direct, 52 Resellers).<br>
+<b>The "Aha" Insight</b>: By opening up 52 reseller connections, Zomato risks leaking precious first-party intent data. Every intermediate reseller network can drop cookies on Zomato's checkout and intent pages, capturing device IDs of active food buyers. These networks then package that "Zomato Intent Audience" and sell it cheap elsewhere on the open web, devaluing Zomato's premium walled garden pricing.
+</p>
+</div>
+<div style="background-color: var(--secondary-background-color, #1E293B); border: 1px solid var(--border-color, #334155); border-radius: 12px; padding: 22px;">
+<h4 style="margin-top: 0; color: #10B981; font-size: 1.1rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">💼 CEO Focus: Bypassing the Middle-Man Tax (SPO Strategy)</h4>
+<p style="margin: 0; font-size: 0.9rem; line-height: 1.6; color: var(--text-color, #94A3B8);">
+<b>The Solution</b>: Standard programmatic bids route through multiple reseller intermediaries before reaching publishers, losing 15-30% of the budget to tech fees.<br>
+<b>The Actionable Recommendation</b>: Enforce a strict buy-side Supply Path Optimization (SPO) filter to bid **only on DIRECT paths**. In the US, this eliminates 64% of bloated routes, and in India it cuts 74.4% (over 114,000 paths) of redundant channels. This improves page load speed (latency reduction), reduces tech fee leakage, and ensures more ad spend is delivered to actual publisher impressions.
 </p>
 </div>
 </div>
